@@ -17,3 +17,6 @@ class Post(models.Model):
         return f"{len(self.message)} 글자"
 
     message_length.short_description = "메시지 글자 수"
+
+    class Meta:
+        ordering = ['-id']

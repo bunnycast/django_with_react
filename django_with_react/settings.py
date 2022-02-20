@@ -33,12 +33,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # third apps
+        # shell_plus로 django 모델을 바로 import
+        # --print-sql 옵션으로 sql문 확인 가능
+    'django_extensions',
+
+    # local apps
     'blog1',
     'instagram',
 ]

@@ -8,6 +8,7 @@ django = "*"
 environ = "*"
 pillow = "*"
 ipython = "*"
+django-extensions = "*"
 
 [dev-packages]
 
