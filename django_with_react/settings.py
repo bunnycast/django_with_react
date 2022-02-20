@@ -117,12 +117,25 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images), 개발 리소스로서 정적인 파일
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL > stiatic 파일이 웹상에서 호출되는 경로
+STATIC_URL = '/static/'
+# STATIC_ROOT > static file이 저장되는 경로
+# STATIC_ROOT = ''  # TODO
+
+
+# media file (FileField, ImageField)
+# DB 필드에는 저장 '경로'를 저장, 실제 파일은 파일 스토리지에 저장
+# MEDIA_URL > media 파일이 웹상에서 호출되는 경로
+MEDIA_URL = '/media/'
+# MEDIA_ROOT > media file이 저장되는 경로
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
