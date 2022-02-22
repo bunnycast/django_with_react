@@ -9,6 +9,7 @@ environ = "*"
 pillow = "*"
 ipython = "*"
 django-extensions = "*"
+django-debug-toolbar = "*"
 
 [dev-packages]
 

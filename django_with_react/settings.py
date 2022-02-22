@@ -45,6 +45,8 @@ INSTALLED_APPS = [
         # shell_plus로 django 모델을 바로 import
         # --print-sql 옵션으로 sql문 확인 가능
     'django_extensions',
+        # django-debug-toolbar로 SQL 디버깅 가능
+    'debug_toolbar',
 
     # local apps
     'blog1',
@@ -59,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'django_with_react.urls'
@@ -147,3 +150,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+INTERNAL_IPS = ['127.0.0.1']
