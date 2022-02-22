@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
 
     # local apps
+    'accounts',
     'blog1',
     'instagram',
 ]
