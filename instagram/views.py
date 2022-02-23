@@ -25,3 +25,7 @@ post_list = ListView.as_view(model=Post)
 # type hint (python 3.6 이상)
 def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
     pass
+
+
+def archive_year(request, year):
+    return HttpResponse(f"{year}년 archives")
