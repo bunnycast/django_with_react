@@ -1,6 +1,6 @@
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.views.generic import ListView
+from django.http import HttpRequest, HttpResponse, Http404
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView
 
 from instagram.models import Post
 
@@ -23,8 +23,25 @@ post_list = ListView.as_view(model=Post)
 
 
 # type hint (python 3.6 이상)
-def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
-    pass
+# def post_detail(request: HttpRequest, pk: int) -> HttpResponse:
+#   # step 1. 단순 orm 쿼리, Post.DoesNotExist 예외처리 불가
+#     post = Post.objects.get(pk=pk)
+#
+#     # Step 2. try catch
+#     # try:
+#     #     post = Post.objects.get(pk=pk)
+#     # except Post.DoesNotExist:
+#     #     raise Http404
+#
+#     # step 3. get_object_or_404 메소드로 한줄에 처리
+#     post = get_object_or_404(Post, pk=pk)
+#
+#     return render(request, 'instagram/post_detail.html', {
+#         'post': post,
+#     })
+
+# step 4. CBV generic > DetailView로 FBV를 한줄로 작성
+post_detail = DetailView.as_view(model=Post)
 
 
 def archive_year(request, year):
