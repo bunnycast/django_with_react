@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'django_extensions',
         # django-debug-toolbar로 SQL 디버깅 가능
     'debug_toolbar',
+        # django-bootstrap4, django templates에서 bootstrap 편하게 사용 지원
+    'bootstrap4',
 
     # local apps
     'accounts',

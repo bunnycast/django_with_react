@@ -8,7 +8,7 @@ from instagram.models import Post
 # Create your views here.
 
 # CBV로 손쉽게 구현 (검색 등 세부 기능은 커스텀해야함)
-post_list = ListView.as_view(model=Post)
+post_list = ListView.as_view(model=Post, paginate_by=10)
 
 # def post_list(request):
 #     qs = Post.objects.all()

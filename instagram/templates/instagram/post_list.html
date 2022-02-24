@@ -1,3 +1,5 @@
+{% load bootstrap4 %}
+
 <!DOCTYPE html>
 <html lang="ko">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -16,6 +18,9 @@
             {% for post in post_list %}
                 <tr>
                     <td>
+                        {{ post.pk }}
+                    </td>
+                    <td>
                         {% if post.photo %}
                             <img src="{{ post.photo.url }}" style="width:150px;" />
                         {% else %}
@@ -29,5 +34,12 @@
             {% endfor %}
         </tbody>
     </table>
+
+    {{ page_obj }}
+
+    {% if is_paginated %}
+        {% bootstrap_pagination page_obj size="small" justify_content="center" %}
+    {% endif %}
+
 </body>
 </html>
