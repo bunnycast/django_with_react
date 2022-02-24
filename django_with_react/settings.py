@@ -70,7 +70,10 @@ ROOT_URLCONF = 'django_with_react.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [
+            # File System Template Loader
+            os.path.join(BASE_DIR, 'django_with_react', 'templates'),
+        ]
         ,
         'APP_DIRS': True,
         'OPTIONS': {

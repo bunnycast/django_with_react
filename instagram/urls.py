@@ -21,10 +21,10 @@ register_converter(YearConverter, 'year')
 app_name = 'instagram'      # URL Reverse에서 namespace 역할을 하게 됨
 
 urlpatterns = [
-    path('', views.post_list),
-    path('<int:pk>/', views.post_detail),
+    path('', views.post_list, name='post_list'),
+    path('<int:pk>/', views.post_detail, name='post_detail'),
 
-    path('archives/<year:year>', views.archive_year),
+    path('archives/<year:year>', views.archive_year, name='archive year'),
     # path('archives/2022/', views.archive_year),
     # path('archives/<int:year>/', views.archive_year),
     # re_path(r'archives/(?P<year>20\d{2})/', views.archive_year),
