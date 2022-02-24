@@ -41,7 +41,27 @@ post_list = ListView.as_view(model=Post)
 #     })
 
 # step 4. CBV generic > DetailView로 FBV를 한줄로 작성
-post_detail = DetailView.as_view(model=Post)
+# post_detail = DetailView.as_view(
+#     model=Post,
+#     queryset=Post.objects.filter(is_public=True),
+# )
+
+
+# step 5. DetailView 상속을 통한 class 재정의
+class PostDetailView(DetailView):
+    model = Post
+    # queryset = Post.objects.filter(is_public=True)
+
+    # queryset = None일 경우 get_queryset 메소드 호출 (DetailView)
+    def get_queryset(self):
+        qs = super().get_queryset()
+        # 현재 user(self.request.user)의 로그인 여부로 분기
+        if not self.request.user.is_authenticated:
+            qs = qs.filter(is_public=True)
+        return qs
+
+
+post_detail = PostDetailView.as_view()
 
 
 def archive_year(request, year):
