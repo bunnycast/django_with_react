@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView
 
 from instagram.models import Post
 
@@ -74,5 +74,9 @@ class PostDetailView(DetailView):
 post_detail = PostDetailView.as_view()
 
 
-def archive_year(request, year):
-    return HttpResponse(f"{year}년 archives")
+# def archive_year(request, year):
+#     return HttpResponse(f"{year}년 archives")
+
+post_archive = ArchiveIndexView.as_view(model=Post, date_field='created_at', paginate_by=10)
+
+post_archive_year = YearArchiveView.as_view(model=Post, date_field='created_at', make_object_list=True)
