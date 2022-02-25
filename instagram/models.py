@@ -3,6 +3,8 @@ from django.db import models
 
 
 # Create your models here.
+from django.urls import reverse
+
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -20,6 +22,10 @@ class Post(models.Model):
         return f"{len(self.message)} 글자"
 
     message_length.short_description = "메시지 글자 수"
+
+    # post_detail에 대한 get_absolute_url 함수를 작성하면 url 관리가 수월해진다
+    def get_absolute_url(self):
+        return reverse('instagram:post_detail', args=[self.pk])
 
     class Meta:
         ordering = ['-id']

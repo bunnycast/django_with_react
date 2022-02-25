@@ -28,7 +28,11 @@
                         {% endif %}
                     </td>
                     <td>
-                        {{ post.message }}
+{#                        url reverse를 활용해 일괄적으로 주소 dispatch #}
+{#                        <a href={% url "instagram:post_detail" post.pk %}>#}
+                        <a href="{{ post.get_absolute_url }}">
+                            {{ post.message }}
+                        </a>
                     </td>
                 </tr>
             {% endfor %}
