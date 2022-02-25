@@ -1,5 +1,7 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView
 
 from instagram.models import Post
@@ -8,7 +10,7 @@ from instagram.models import Post
 # Create your views here.
 
 # CBV로 손쉽게 구현 (검색 등 세부 기능은 커스텀해야함)
-post_list = ListView.as_view(model=Post, paginate_by=10)
+# post_list = login_required(ListView.as_view(model=Post, paginate_by=10))
 
 # def post_list(request):
 #     qs = Post.objects.all()
@@ -45,6 +47,14 @@ post_list = ListView.as_view(model=Post, paginate_by=10)
 #     model=Post,
 #     queryset=Post.objects.filter(is_public=True),
 # )
+
+@method_decorator(login_required, name='dispatch')
+class PostListView(ListView):
+    model = Post
+    paginate_by = 10
+
+
+post_list = PostListView.as_view()
 
 
 # step 5. DetailView 상속을 통한 class 재정의
