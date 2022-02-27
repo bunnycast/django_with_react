@@ -142,8 +142,13 @@ USE_TZ = True
 
 # STATIC_URL > stiatic 파일이 웹상에서 호출되는 경로
 STATIC_URL = '/static/'
-# STATIC_ROOT > static file이 저장되는 경로
-# STATIC_ROOT = ''  # TODO
+# STATIC_ROOT > static file이 저장되는 경로 (collectstatic 으로 static file 모으기)
+# 배포시(DEBUG=False) 의미가 있음
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATICFILES_DIRS > 프로젝트 전반에 사용되는 static 파일 경로
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'django_with_react', 'static'),
+]
 
 
 # media file (FileField, ImageField)
