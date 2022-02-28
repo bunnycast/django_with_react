@@ -1,13 +1,28 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView
 
+from instagram.forms import PostForm
 from instagram.models import Post
 
 
 # Create your views here.
+
+def post_new(request):
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES)    # request.POST 먼저 reqrest.FILES 다음
+        if form.is_valid():
+            post = form.save()
+            return redirect(post)       # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
+    else:
+        form = PostForm()
+
+    return render(request, 'instagram/post_form.html', {
+        'form': form,
+    })
+
 
 # CBV로 손쉽게 구현 (검색 등 세부 기능은 커스텀해야함)
 # post_list = login_required(ListView.as_view(model=Post, paginate_by=10))

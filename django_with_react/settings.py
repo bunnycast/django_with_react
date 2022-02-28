@@ -30,6 +30,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     # ngrok http 8080
     os.environ.get('NGROK_HOST', None),
+    '127.0.0.1',
 ]
 
 

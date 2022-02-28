@@ -1,14 +1,15 @@
 from django.conf import settings
+from django.core.validators import MinLengthValidator
 from django.db import models
-
-
-# Create your models here.
 from django.urls import reverse
 
 
+# Create your models here.
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    message = models.TextField()
+    message = models.TextField(
+        validators=[MinLengthValidator(10)]
+    )
     photo = models.ImageField(blank=True, upload_to='instagram/post/%Y/%m/%d')  # upload_to = media_root 하위에 저장 경로 추가
     tag_set = models.ManyToManyField('instagram.Tag', blank=True)
     is_public = models.BooleanField(default=False, verbose_name="공개여부")
