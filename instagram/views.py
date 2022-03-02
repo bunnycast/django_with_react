@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
@@ -9,15 +10,39 @@ from instagram.models import Post
 
 
 # Create your views here.
-
+@login_required
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES)    # request.POST 먼저 reqrest.FILES 다음
         if form.is_valid():
-            post = form.save()
+            post = form.save(commit=False)  # commit=False, Form으로 유효성 검사 하고 인스턴스 저장은 나중에
+            post.author = request.user  # 현재 로그인 user Instance
+            post.save()
             return redirect(post)       # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
     else:
         form = PostForm()
+
+    return render(request, 'instagram/post_form.html', {
+        'form': form,
+    })
+
+
+@login_required
+def post_edit(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    # 작성자 check tip, decorator 형식으로 활용할 수 있음
+    if post.author != request.user:
+        messages.error(request, "작성자만 수정할 수 있습니다.")
+        return redirect(post)
+
+    if request.method == "POST":
+        form = PostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            post = form.save()
+            return redirect(post)  # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
+    else:
+        form = PostForm(instance=post)
 
     return render(request, 'instagram/post_form.html', {
         'form': form,
