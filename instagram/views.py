@@ -1,57 +1,112 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView
+from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView, CreateView, UpdateView, \
+    DeleteView
 
 from instagram.forms import PostForm
 from instagram.models import Post
 
 
 # Create your views here.
-@login_required
-def post_new(request):
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES)    # request.POST 먼저 reqrest.FILES 다음
-        if form.is_valid():
-            post = form.save(commit=False)  # commit=False, Form으로 유효성 검사 하고 인스턴스 저장은 나중에
-            post.author = request.user  # 현재 로그인 user Instance
-            post.save()
-            messages.success(request, '포스팅을 저장했습니다.')
-            return redirect(post)       # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
-    else:
-        form = PostForm()
+# @login_required
+# def post_new(request):
+#     if request.method == "POST":
+#         form = PostForm(request.POST, request.FILES)    # request.POST 먼저 reqrest.FILES 다음
+#         if form.is_valid():
+#             post = form.save(commit=False)  # commit=False, Form으로 유효성 검사 하고 인스턴스 저장은 나중에
+#             post.author = request.user  # 현재 로그인 user Instance
+#             post.save()
+#             messages.success(request, '포스팅을 저장했습니다.')
+#             return redirect(post)       # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
+#     else:
+#         form = PostForm()
+#
+#     return render(request, 'instagram/post_form.html', {
+#         'form': form,
+#         'post': None,
+#     })
 
-    return render(request, 'instagram/post_form.html', {
-        'form': form,
-        'post': None,
-    })
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    form_class = PostForm
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        messages.success(self.request, '포스팅을 저장했습니다.')
+        return super().form_valid(form)
 
 
-@login_required
-def post_edit(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+post_new = PostCreateView.as_view()
 
-    # 작성자 check tip, decorator 형식으로 활용할 수 있음
-    if post.author != request.user:
-        messages.error(request, "작성자만 수정할 수 있습니다.")
-        return redirect(post)
 
-    if request.method == "POST":
-        form = PostForm(request.POST, request.FILES, instance=post)
-        if form.is_valid():
-            post = form.save()
-            messages.success(request, '포스팅을 수정했습니다.')
-            return redirect(post)  # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
-    else:
-        form = PostForm(instance=post)
+# @login_required
+# def post_edit(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#
+#     # 작성자 check tip, decorator 형식으로 활용할 수 있음
+#     if post.author != request.user:
+#         messages.error(request, "작성자만 수정할 수 있습니다.")
+#         return redirect(post)
+#
+#     if request.method == "POST":
+#         form = PostForm(request.POST, request.FILES, instance=post)
+#         if form.is_valid():
+#             post = form.save()
+#             messages.success(request, '포스팅을 수정했습니다.')
+#             return redirect(post)  # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
+#     else:
+#         form = PostForm(instance=post)
+#
+#     return render(request, 'instagram/post_form.html', {
+#         'form': form,
+#         'post': post,
+#     })
 
-    return render(request, 'instagram/post_form.html', {
-        'form': form,
-        'post': post,
-    })
+class PostUpdateView(LoginRequiredMixin, UpdateView):
+    model = Post
+    form_class = PostForm
 
+    def form_valid(self, form):
+        messages.success(self.request, '포스팅을 수정했습니다.')
+        return super().form_valid(form)
+
+
+post_edit = PostUpdateView.as_view()
+
+
+# @login_required
+# def post_delete(request, pk):
+#     post = get_object_or_404(Post, pk=pk)
+#
+#     if request.method == "POST":
+#         post.delete()
+#         messages.success(request, "포스팅을 삭제했습니다.")
+#         return redirect('instagram:post_list')
+#     return render(request, 'instagram/post_confirm_delete.html' , {
+#         'post': post,
+#     })
+
+
+class PostDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    # 소스코드는 import 될 때 실행되지만, url reverse는 프로젝트가 실행 되어야 확인 가능해서 에러 발생
+    # success_url = reverse('instagram:post_list')
+
+    # 방법 1 : 값이 사용될 시점에 작동하는 reverse_lazy 메소드 활용
+    success_url = reverse_lazy('instagram:post_list')
+
+    # 방법 2 : get_success_url 함수 사용
+    # def get_success_url(self):
+    #     return reverse('instagram:post_list')
+
+
+post_delete = PostDeleteView.as_view()
 
 @login_required
 def post_delete(request, pk):
@@ -104,6 +159,7 @@ def post_delete(request, pk):
 #     model=Post,
 #     queryset=Post.objects.filter(is_public=True),
 # )
+
 
 @method_decorator(login_required, name='dispatch')
 class PostListView(ListView):
