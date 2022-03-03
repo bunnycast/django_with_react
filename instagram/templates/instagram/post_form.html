@@ -1,8 +1,27 @@
-<form action="" method="post" enctype="multipart/form-data">
-{#    csrf token = 사이트 간 요청 위조 공격을 막고자 form post 요청시 현재 요청이 유효한지 확인하는 토큰 != 유저인증 토큰, JWT#}
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-    </table>
-    <input type="submit" value="저장">
-</form>
+{% extends "instagram/layout.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {#    csrf token = 사이트 간 요청 위조 공격을 막고자 form post 요청시 현재 요청이 유효한지 확인하는 토큰 != 유저인증 토큰, JWT#}
+        {% csrf_token %}
+        {% bootstrap_form form %}
+{#        <table>#}
+{#            {{ form.as_table }}#}
+{#        </table>#}
+        {% buttons %}
+            <button class="btn btn-primary">
+                저장
+            </button>
+        {% endbuttons %}
+    </form>
+    <hr/>
+    {% if post %}
+        <a href="{{ post.get_absolute_url }}" class="btn btn-secondary">
+            내용으로
+        </a>
+    {% endif %}
+    <a href="{% url "instagram:post_list" %}" class="btn btn-primary">
+        목록
+    </a>
+{% endblock %}

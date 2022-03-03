@@ -18,12 +18,14 @@ def post_new(request):
             post = form.save(commit=False)  # commit=False, Form으로 유효성 검사 하고 인스턴스 저장은 나중에
             post.author = request.user  # 현재 로그인 user Instance
             post.save()
+            messages.success(request, '포스팅을 저장했습니다.')
             return redirect(post)       # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
     else:
         form = PostForm()
 
     return render(request, 'instagram/post_form.html', {
         'form': form,
+        'post': None,
     })
 
 
@@ -40,18 +42,21 @@ def post_edit(request, pk):
         form = PostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
             post = form.save()
+            messages.success(request, '포스팅을 수정했습니다.')
             return redirect(post)  # get_absolute_url 구현으로 post_new 인스턴스 페이지로 이동
     else:
         form = PostForm(instance=post)
 
     return render(request, 'instagram/post_form.html', {
         'form': form,
+        'post': post,
     })
 
 
 # CBV로 손쉽게 구현 (검색 등 세부 기능은 커스텀해야함)
 # post_list = login_required(ListView.as_view(model=Post, paginate_by=10))
 
+# @login_required
 # def post_list(request):
 #     qs = Post.objects.all()
 #     q = request.GET.get('q', '')
