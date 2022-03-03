@@ -53,6 +53,18 @@ def post_edit(request, pk):
     })
 
 
+@login_required
+def post_delete(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+
+    if request.method == "POST":
+        post.delete()
+        messages.success(request, "포스팅을 삭제했습니다.")
+        return redirect('instagram:post_list')
+    return render(request, 'instagram/post_confirm_delete.html' , {
+        'post': post,
+    })
+
 # CBV로 손쉽게 구현 (검색 등 세부 기능은 커스텀해야함)
 # post_list = login_required(ListView.as_view(model=Post, paginate_by=10))
 
